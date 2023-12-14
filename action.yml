@@ -1,0 +1,32 @@
+name: 'Build and push image to ECR'
+description: 'Build and push image to ECR'
+
+runs:
+  using: 'composite'
+  steps:
+      - name: Assume role for environment
+        uses: bisnow/github-actions-assume-role-for-environment@v1.0
+        with:
+          environment: ${{ inputs.environment }}
+      - name: Install dependencies
+        uses: php-actions/composer@v6
+        with:
+          ssh_key: ${{ secrets.GA_SSH_KEY }}
+          ssh_key_pub: ${{ secrets.GA_SSH_PUB }}
+          dev: no
+          args: --profile --ignore-platform-reqs --optimize-autoloader
+          memory_limit: -1
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: '${{ env.REGISTRY }}:${{ env.TAG }},${{ env.REGISTRY }}:${{ env.ENVIRONMENT }}'
