@@ -11,10 +11,10 @@ inputs:
 runs:
   using: 'composite'
   steps:
-      - name: Assume role for environment
+      - name: Assume role for AWS Account
         uses: bisnow/github-actions-assume-role-for-environment@main
         with:
-          environment: ${{ inputs.environment }}
+          aws_account: ${{ inputs.environment }}
       - name: Install dependencies
         uses: php-actions/composer@v6
         with:
