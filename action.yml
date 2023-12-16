@@ -18,8 +18,8 @@ runs:
       - name: Install dependencies
         uses: php-actions/composer@v6
         with:
-          ssh_key: ${{ input.ga_ssh_key }}
-          ssh_key_pub: ${{ input.ga_ssh_key_pub }}
+          ssh_key: ${{ inputs.ga_ssh_key }}
+          ssh_key_pub: ${{ inputs.ga_ssh_key_pub }}
           dev: no
           args: --profile --ignore-platform-reqs --optimize-autoloader
           memory_limit: -1
