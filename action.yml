@@ -1,5 +1,12 @@
 name: 'Build and push image to ECR'
 description: 'Build and push image to ECR'
+inputs:
+  ga_ssh_key:
+    description: 'SSH key to use for composer'
+    required: true
+  ga_ssh_key_pub:
+    description: 'SSH key to use for composer'
+    required: true
 
 runs:
   using: 'composite'
@@ -11,8 +18,8 @@ runs:
       - name: Install dependencies
         uses: php-actions/composer@v6
         with:
-          ssh_key: ${{ secrets.GA_SSH_KEY }}
-          ssh_key_pub: ${{ secrets.GA_SSH_PUB }}
+          ssh_key: ${{ input.ga_ssh_key }}
+          ssh_key_pub: ${{ input.ga_ssh_key_pub }}
           dev: no
           args: --profile --ignore-platform-reqs --optimize-autoloader
           memory_limit: -1
