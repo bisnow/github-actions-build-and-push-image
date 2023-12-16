@@ -1,6 +1,9 @@
 name: 'Build and push image to ECR'
 description: 'Build and push image to ECR'
 inputs:
+  aws_account:
+    description: 'AWS Account to use'
+    required: true
   ga_ssh_key:
     description: 'SSH key to use for composer'
     required: true
@@ -14,7 +17,7 @@ runs:
       - name: Assume role for AWS Account
         uses: bisnow/github-actions-assume-role-for-environment@main
         with:
-          aws_account: ${{ inputs.environment }}
+          aws_account: ${{ inputs.aws_account }}
       - name: Install dependencies
         uses: php-actions/composer@v6
         with:
