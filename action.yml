@@ -7,15 +7,13 @@ inputs:
   build_args:
     description: 'Build args to pass to docker build'
     required: false
-  ga_ssh_key:
-    description: 'SSH key to use for composer'
-    required: false
-  ga_ssh_key_pub:
-    description: 'SSH key to use for composer'
-    required: false
   composer_oauth:
     description: 'Composer oauth token'
     required: false
+  dev_package:
+    description: 'Dev package to install'
+    required: false
+    default: no
 
 runs:
   using: 'composite'
@@ -29,9 +27,7 @@ runs:
         env:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ inputs.composer_oauth }}"} }'
         with:
-          # ssh_key: ${{ inputs.ga_ssh_key }}
-          # ssh_key_pub: ${{ inputs.ga_ssh_key_pub }}
-          dev: no
+          dev: ${{ inputs.dev_package }}
           args: --profile --ignore-platform-reqs --optimize-autoloader
           memory_limit: -1
       - name: Set up QEMU
