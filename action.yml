@@ -9,10 +9,13 @@ inputs:
     required: false
   ga_ssh_key:
     description: 'SSH key to use for composer'
-    required: true
+    required: false
   ga_ssh_key_pub:
     description: 'SSH key to use for composer'
-    required: true
+    required: false
+  composer_oauth:
+    description: 'Composer oauth token'
+    required: false
 
 runs:
   using: 'composite'
@@ -23,9 +26,11 @@ runs:
           aws_account: ${{ inputs.aws_account }}
       - name: Install dependencies
         uses: php-actions/composer@v6
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ input.composer_oauth }}"} }'
         with:
-          ssh_key: ${{ inputs.ga_ssh_key }}
-          ssh_key_pub: ${{ inputs.ga_ssh_key_pub }}
+          # ssh_key: ${{ inputs.ga_ssh_key }}
+          # ssh_key_pub: ${{ inputs.ga_ssh_key_pub }}
           dev: no
           args: --profile --ignore-platform-reqs --optimize-autoloader
           memory_limit: -1
