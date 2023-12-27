@@ -27,7 +27,7 @@ runs:
       - name: Install dependencies
         uses: php-actions/composer@v6
         env:
-          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ input.composer_oauth }}"} }'
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ inputs.composer_oauth }}"} }'
         with:
           # ssh_key: ${{ inputs.ga_ssh_key }}
           # ssh_key_pub: ${{ inputs.ga_ssh_key_pub }}
