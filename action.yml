@@ -18,6 +18,10 @@ inputs:
     description: 'Dev package to install'
     required: false
     default: no
+  php_version:
+    description: 'PHP version to use'
+    required: false
+    default: "8.2"
 
 runs:
   using: 'composite'
@@ -33,6 +37,7 @@ runs:
         with:
           dev: ${{ inputs.dev_package }}
           args: --profile --ignore-platform-reqs --optimize-autoloader
+          php_version: ${{ inputs.php_version }}
           memory_limit: -1
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
