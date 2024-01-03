@@ -31,7 +31,7 @@ runs:
         with:
           aws_account: ${{ inputs.aws_account }}
       - name: Install dependencies
-        uses: php-actions/composer@master
+        uses: php-actions/composer@v6
         env:
           COMPOSER_AUTH: "{\"github-oauth\":{\"github.com\":\"${{ inputs.composer_oauth }}\"}}"
         with:
