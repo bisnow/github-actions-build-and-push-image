@@ -33,7 +33,7 @@ runs:
       - name: Install dependencies
         uses: php-actions/composer@v6
         env:
-          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ inputs.composer_oauth }}"} }'
+          COMPOSER_AUTH: "{\"github-oauth\": {\"github.com\": \"${{ inputs.composer_oauth }}\"} }"
         with:
           dev: ${{ inputs.dev_package }}
           args: --profile --ignore-platform-reqs --optimize-autoloader
