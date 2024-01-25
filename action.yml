@@ -48,4 +48,4 @@ runs:
           platforms: ${{ inputs.platforms }}
           push: true
           build-args: ${{ inputs.build_args }}
-          tags: ${{ env.REGISTRY }}:${{ env.TAG }},${{ env.REGISTRY }}:${{ env.ENVIRONMENT }},${{ env.REGISTRY }}:${{ github.sha }},${{ env.REGISTRY }}:latest,${{ env.REGISTRY }}:${{ github.run_id }}
+          tags: ${{ env.REGISTRY }}:${{ env.ENVIRONMENT }},${{ env.REGISTRY }}:${{ github.sha }},${{ env.REGISTRY }}:latest,${{ env.REGISTRY }}:${{ github.run_id }}
