@@ -10,6 +10,10 @@ inputs:
   composer_oauth:
     description: 'Composer oauth token'
     required: false
+  version-tag:
+    description: 'Version tag'
+    required: false
+    default: latest
   platforms:
     description: 'Platforms to build for'
     required: false
@@ -48,4 +52,4 @@ runs:
           platforms: ${{ inputs.platforms }}
           push: true
           build-args: ${{ inputs.build_args }}
-          tags: ${{ env.REGISTRY }}:${{ github.sha }},${{ env.REGISTRY }}:latest,${{ env.REGISTRY }}:${{ env.TAG }}
+          tags: ${{ env.REGISTRY }}:${{ github.sha }},${{ env.REGISTRY }}:${{ inputs.version-tag }},${{ env.REGISTRY }}:${{ env.TAG }}
