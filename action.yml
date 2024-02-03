@@ -1,43 +1,63 @@
 name: 'Build and push image to ECR'
 description: 'Build and push image to ECR'
 inputs:
-  aws_account:
+  aws-account:
     description: 'AWS Account to use'
     required: true
-  build_args:
+  registry:
+    description: 'ECR registry'
+    required: true
+  build-args:
     description: 'Build args to pass to docker build'
     required: false
-  composer_oauth:
+  composer-oauth:
     description: 'Composer oauth token'
     required: false
   version-tag:
-    description: 'Version tag'
+    description: 'Tag to use for the image'
     required: false
     default: latest
   platforms:
     description: 'Platforms to build for'
     required: false
     default: linux/amd64,linux/arm64
-  dev_package:
+  dev-package:
     description: 'Dev package to install'
     required: false
     default: no
+  build-assets:
+    description: 'Build assets'
+    required: false
+    default: ''
 
 runs:
   using: 'composite'
   steps:
+      - name: Use Node.js
+        if: ${{ inputs.build-assets != '' }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
       - name: Assume role for AWS Account
         uses: bisnow/github-actions-assume-role-for-environment@main
         with:
-          aws_account: ${{ inputs.aws_account }}
+          aws-account: ${{ inputs.aws-account }}
       - name: Install dependencies
         uses: php-actions/composer@v6
         env:
-          COMPOSER_AUTH: "{\"github-oauth\":{\"github.com\":\"${{ inputs.composer_oauth }}\"}}"
+          COMPOSER_AUTH: "{\"github-oauth\":{\"github.com\":\"${{ inputs.composer-oauth }}\"}}"
         with:
-          dev: ${{ inputs.dev_package }}
+          dev: ${{ inputs.dev-package }}
           args: --profile --ignore-platform-reqs --optimize-autoloader
           memory_limit: -1
+      - name: Build Assets
+        if: ${{ inputs.build-assets != '' }}
+        shell: bash
+        run: |
+          npm install
+          npm run production
+        env:
+          BUILD: ${{ inputs.version-tag }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -51,5 +71,5 @@ runs:
           context: .
           platforms: ${{ inputs.platforms }}
           push: true
-          build-args: ${{ inputs.build_args }}
-          tags: ${{ env.REGISTRY }}:${{ github.sha }},${{ env.REGISTRY }}:${{ inputs.version-tag }},${{ env.REGISTRY }}:${{ env.TAG }}
+          build-args: ${{ inputs.build-args }}
+          tags: ${{ inputs.registry }}:${{ github.sha }},${{ inputs.registry }}:${{ inputs.version-tag }}
