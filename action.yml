@@ -25,6 +25,10 @@ inputs:
     description: 'Dev package to install'
     required: false
     default: no
+  no-composer:
+    description: 'Do not run composer install'
+    required: false
+    default: ''
   build-assets:
     description: 'Build assets'
     required: false
@@ -43,6 +47,7 @@ runs:
         with:
           aws-account: ${{ inputs.aws-account }}
       - name: Install dependencies
+        if: ${{ inputs.no-composer == '' }}
         uses: php-actions/composer@v6
         env:
           COMPOSER_AUTH: "{\"github-oauth\":{\"github.com\":\"${{ inputs.composer-oauth }}\"}}"
