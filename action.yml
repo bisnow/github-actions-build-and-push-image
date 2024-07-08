@@ -70,6 +70,9 @@ runs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
+      - name: Remove DOCKER_ENV file
+        shell: bash
+        run: rm -f DOCKER_ENV
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
