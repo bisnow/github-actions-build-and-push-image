@@ -29,6 +29,10 @@ inputs:
     description: 'Do not run composer install'
     required: false
     default: ''
+  composer-ssh:
+    description: 'Run composer using SSH instead of oauth'
+    required: false
+    default: ''
   build-assets:
     description: 'Build assets'
     required: false
@@ -47,7 +51,7 @@ runs:
         with:
           aws-account: ${{ inputs.aws-account }}
       - name: Install dependencies
-        if: ${{ inputs.no-composer == '' }}
+        if: ${{ inputs.no-composer == '' && inputs.composer-ssh == '' }}
         uses: php-actions/composer@v6
         env:
           COMPOSER_AUTH: "{\"github-oauth\":{\"github.com\":\"${{ inputs.composer-oauth }}\"}}"
@@ -55,6 +59,20 @@ runs:
           dev: ${{ inputs.dev-package }}
           args: --profile --ignore-platform-reqs --optimize-autoloader
           memory_limit: -1
+      - name: Install dependencies with SSH
+        if: ${{ inputs.no-composer == '' && inputs.composer-ssh != '' }}
+        shell: bash
+        run: |
+              git clone https://.:${{ env.PAT }}@github.com/BisCred/bisnow-github-actions-ssh /tmp/bisnow-github-actions-ssh
+              cp /tmp/bisnow-github-actions-ssh/composer-ssh-keys.sh /tmp/composer-ssh-keys.sh
+              sudo mkdir ~/.ssh
+              sudo mkdir ~/.ssh/git-keys
+              sudo cp /tmp/bisnow-github-actions-ssh/.ssh/* ~/.ssh/git-keys
+              rm -rf /tmp/bisnow-github-actions-ssh
+              sudo find ~/.ssh/git-keys/ -type f -name "*" -exec chmod u+x {} +
+              sudo chmod u+x /tmp/composer-ssh-keys.sh
+              git config --global core.sshCommand /tmp/composer-ssh-keys.sh
+              composer install --no-progress --prefer-dist --optimize-autoloader
       - name: Build Assets
         if: ${{ inputs.build-assets != '' }}
         shell: bash
