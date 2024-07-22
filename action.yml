@@ -13,6 +13,7 @@ inputs:
   composer-oauth:
     description: 'Composer oauth token'
     required: false
+    default: ''
   image-tag:
     description: 'Tag to use for the image'
     required: false
@@ -46,11 +47,18 @@ runs:
         uses: bisnow/github-actions-assume-role-for-environment@main
         with:
           aws-account: ${{ inputs.aws-account }}
-      - name: Install dependencies
-        if: ${{ inputs.no-composer == '' }}
+      - name: Install dependencies with oauth
+        if: ${{ inputs.no-composer == '' && inputs.composer-oauth != '' }}
         uses: php-actions/composer@v6
         env:
           COMPOSER_AUTH: "{\"github-oauth\":{\"github.com\":\"${{ inputs.composer-oauth }}\"}}"
+        with:
+          dev: ${{ inputs.dev-package }}
+          args: --profile --ignore-platform-reqs --optimize-autoloader
+          memory_limit: -1
+      - name: Install dependencies no oauth
+        if: ${{ inputs.no-composer == '' && inputs.composer-oauth == '' }}
+        uses: php-actions/composer@v6
         with:
           dev: ${{ inputs.dev-package }}
           args: --profile --ignore-platform-reqs --optimize-autoloader
