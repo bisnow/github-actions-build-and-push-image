@@ -42,7 +42,7 @@ runs:
         if: ${{ inputs.build-assets != '' }}
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '22.x'
       - name: Assume role for AWS Account
         uses: bisnow/github-actions-assume-role-for-environment@main
         with:
