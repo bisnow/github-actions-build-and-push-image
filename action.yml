@@ -47,6 +47,8 @@ runs:
         uses: bisnow/github-actions-assume-role-for-environment@main
         with:
           aws-account: ${{ inputs.aws-account }}
+      - name: Add Flux license
+        run: composer config http-basic.composer.fluxui.dev "${{ secrets.FLUX_USERNAME }}" "${{ secrets.FLUX_LICENSE_KEY }}"
       - name: Install dependencies with oauth
         if: ${{ inputs.no-composer == '' && inputs.composer-oauth != '' }}
         uses: php-actions/composer@v6
