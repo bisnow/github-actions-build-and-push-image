@@ -56,6 +56,7 @@ runs:
         with:
           aws-account: ${{ inputs.aws-account }}
       - name: Add Flux license
+        shell: bash
         run: composer config http-basic.composer.fluxui.dev "${{ inputs.flux-username }}" "${{ inputs.flux-license-key }}"
       - name: Install dependencies with oauth
         if: ${{ inputs.no-composer == '' && inputs.composer-oauth != '' }}
