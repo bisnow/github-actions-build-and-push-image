@@ -51,6 +51,10 @@ runs:
         uses: actions/setup-node@v4
         with:
           node-version: '22.x'
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
       - name: Assume role for AWS Account
         uses: bisnow/github-actions-assume-role-for-environment@main
         with:
