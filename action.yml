@@ -30,6 +30,10 @@ inputs:
     description: 'Platforms to build for'
     required: false
     default: linux/amd64,linux/arm64
+  cache-from:
+    description: 'Cache from'
+    required: false
+    default: ''
   dev-package:
     description: 'Dev package to install'
     required: false
@@ -98,10 +102,11 @@ runs:
         shell: bash
         run: rm -f DOCKER_ENV
       - name: Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           platforms: ${{ inputs.platforms }}
           push: true
           build-args: ${{ inputs.build-args }}
+          cache-from: ${{ inputs.cache-from }}
           tags: ${{ inputs.registry }}:${{ github.sha }},${{ inputs.registry }}:${{ inputs.image-tag }}
