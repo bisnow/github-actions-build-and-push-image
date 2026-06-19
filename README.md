@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
 
       - name: Build and Push Image to ECR
         uses: ./.github/actions/build-and-push-ecr
